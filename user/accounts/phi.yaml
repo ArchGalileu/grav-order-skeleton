@@ -1,0 +1,11 @@
+email: phi@illumiphi.com
+fullname: Phi
+title: Architect
+state: enabled
+access:
+  admin:
+    login: true
+    super: true
+  site:
+    login: true
+hashed_password: $2y$10$LFH7TqA25hpBKWnNnoqr.e6A4bzCP.A6T8XPCb44DEcfJthJj3rBK
