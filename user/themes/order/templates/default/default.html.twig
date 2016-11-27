@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% include 'default/blocks/head.html.twig' %}
+
+
+<body>
+
+{% block header %}
+{% include 'default/blocks/header.html.twig' %}
+{% endblock header %}
+
+{% block main %}
+<main class="main">
+    <div class="container content">
+      {% block content %}{% endblock %}
+    </div>
+</main>
+{% endblock main %}
+
+{% block footer %}
+{% include 'default/blocks/footer.html.twig' %}
+{% endblock footer %}
+
+</body>
+{% block bottom %}{% endblock %}
+</html>

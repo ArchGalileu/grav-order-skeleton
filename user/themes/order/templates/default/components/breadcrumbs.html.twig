@@ -1,0 +1,40 @@
+{#
+Original Code from breadcrumbs.plugin
+- still need it for breadcrumbs.get
+#}
+
+{% block breadcrumbs %}
+{% if config.plugins.breadcrumbs.enabled %}
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+        {% set crumbs = breadcrumbs.get() %}
+        {% set breadcrumbs_config = config.plugins.breadcrumbs %}
+
+        {% if crumbs|length > 1 or breadcrumbs_config.show_all %}
+        <nav class="breadcrumbs"
+              aria-label="Breadcrumb navigation"
+              role="navigation"
+              itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+            <span class="glyphicon glyphicon-home"></span>
+            {% for crumb in crumbs %}
+                {% if not loop.last %}
+                    {% if crumb.routable %}
+                        <a href="{{ crumb.url }}" itemprop="url"><span itemprop="title">{{ crumb.menu }}</span></a>
+                    {% else  %}
+                        <span itemprop="title">{{ crumb.menu }}</span>
+                    {% endif %}
+                    <span class="glyphicon glyphicon-menu-right"></span>
+                {% else %}
+                    {% if breadcrumbs_config.link_trailing %}
+                        <a  href="{{ crumb.url }}" itemprop="url"><span itemprop="title">{{ crumb.menu }}</span></a>
+                    {% else %}
+                        <span class="active" itemprop="title">{{ crumb.menu }}</span>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </nav>
+        {% endif %}
+      </div>
+    </div>
+{% endif %}
+{% endblock %}

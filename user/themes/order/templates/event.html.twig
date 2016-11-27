@@ -1,0 +1,23 @@
+{% embed 'default/default.html.twig' %}
+{% use "default/components/breadcrumbs.html.twig" %}
+
+{% block content %}
+<!-- item.html.twig -->
+  {{ block('breadcrumbs') }}
+
+	<div class="row ">
+			<div class="col-md-12">
+					<div class="row">
+							<div class="col-md-9 ">
+								{% include 'partials/event_item.html.twig' with {'event':page.parent, 'truncate':false, 'single':true} %}
+							</div>
+							<div class="col-md-3">
+								{% include 'partials/events_sidebar.html.twig' with {'page':page.parent} %}
+							</div>
+						</div>
+				</div>
+		</div>
+
+{% endblock %}
+
+{% endembed %}

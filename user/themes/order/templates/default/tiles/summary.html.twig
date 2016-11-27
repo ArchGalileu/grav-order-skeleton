@@ -1,0 +1,59 @@
+{# base tile for display content of a page #}
+
+
+{% block tile %}
+<!-- summary.html.twig -->
+<article class="tile">
+  {{ block('tile_header') }}
+</article>
+{% endblock tile %}
+
+{% block tile_header %}
+
+      <header class="row tile-header">
+        <div class="col-md-2">
+          <!-- banner image -->
+          {% set header_image_width = page.header.header_image_width | defined(200) %}
+          {% set header_image_height = page.header.header_image_height | defined(200) %}
+
+          {% set featured_image = page.header.featured_image %}
+            {% if featured_image %}
+                {% set header_image_media = page.media.images[featured_image] %}
+            {% else %}
+                {% set header_image_media = page.media.images | first %}
+            {% endif %}
+            {% if header_image_media %}
+              {{ header_image_media.cropZoom(header_image_width, header_image_height).html('', '', 'img-responsive tile-image-feature') }}
+            {% else %}
+              <img
+                src="http://placehold.it/{{ header_image_width }}x{{ header_image_height }}"
+                class="img-responsive tile-image-feature"/>
+            {% endif %}
+        </div>
+        <div class="col-md-10">
+            <h2>
+              <a href="{{ page.url }}">{{ page.title }}</a>
+            </h2>
+
+            {% if page.taxonomy.tag %}
+            <div class="tags">
+                {% for tag in page.taxonomy.tag %}
+                    <a class="btn btn-primary btn-xs"
+                      href="{{ page.url }}/tag{{ config.system.param_sep }}{{ tag }}">{{ tag }}</a>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <div class="tile-header-date">
+              <div title="{{ page.date|date("F j, Y, g:i a") }}">{{ page.date|nicetime(false) }}</div>
+            </div>
+            <div class="tile-header-summary">
+              {% if page.summary %}
+                  {{ page.summary }}
+              {% else %}
+                  {{ page.content|truncate(100) }}
+              {% endif %}
+              <p><a class="btn btn-default" href="{{ page.url }}">Read More<span class="glyphicon glyphicon-menu-right"></a></p>
+            </div>
+        </div> <!--column-->
+  </header>
+{% endblock %}

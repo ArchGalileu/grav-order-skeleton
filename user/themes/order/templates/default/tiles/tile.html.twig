@@ -1,0 +1,135 @@
+{# base tile for display content of a page #}
+
+
+{% block tile %}
+<!-- tile.html.twig -->
+<article class="tile">
+  {{ block('tile_header') }}
+  {{ block('tile_content') }}
+  {{ block('tile_footer') }}
+</article>
+{% endblock tile %}
+
+{% block tile_header %}
+
+      <div class="row">
+        <div class="col-md-10">
+          <header class="tile-header">
+            {% if page.header.link %}
+            <h2>
+                {% if page.header.continue_link is not sameas(false) %}
+                    <a href="{{ page.url }}">
+                      <i class="fa fa-angle-double-right"></i>
+                    </a>
+                {% endif %}
+                <a href="{{ page.header.link }}">{{ page.title }}</a>
+            </h2>
+            {% else %}
+            <h2>
+              <a href="{{ page.url }}">{{ page.title }}</a>
+            </h2>
+            {% endif %}
+
+            {% if page.taxonomy.tag %}
+            <div class="tags">
+                {% for tag in page.taxonomy.tag %}
+                    <a class="btn btn-primary btn-xs"
+                      href="{{ page.url }}/tag{{ config.system.param_sep }}{{ tag }}">{{ tag }}</a>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+          </header> <!--tile header-->
+        </div> <!--column-->
+
+        <div class="col-md-2">
+          <div class="tile-header-date">
+              <div class="day">{{ page.date|date("d") }}</div>
+              <div class="month">{{ page.date|date("M") }}</div>
+          </div>
+          <div class="tile-header-date-extended">
+              <i class="fa fa-calendar"></i> <span>{{ page.date|date("F j, Y, g:i a") }}</span>
+          </div>
+        </div>
+
+        <!-- banner image -->
+        {% set header_image = page.header.header_image | defined(true) %}
+        {% set featured_image = page.header.featured_image %}
+
+        <div class="col-md-12">
+          {% if big_header %}
+            {{ page.media.images|first.html('', '', 'img-responsive tile-image-feature') }}
+          {% else %}
+            {% if header_image %}
+              {% if featured_image %}
+                  {% set header_image_media = page.media.images[featured_image] %}
+              {% else %}
+                  {% set header_image_media = page.media.images | first %}
+              {% endif %}
+              {{ header_image_media.html('', '', 'img-responsive tile-image-feature') }}
+            {% endif %}
+          {% endif %}
+        </div>
+  </div>
+{% endblock %}
+
+{% block tile_content %}
+<div class="row tile-content">
+    <div class="col-md-12">
+
+      {% set content = page.content|slice(page.summary|length) %}
+
+      {% if page.header.continue_link is sameas(false) %}
+          {{ content }}
+          {% if not truncate %}
+            {% set show_prev_next = true %}
+          {% endif %}
+
+      {% elseif truncate and page.summary != content %}
+          {{ page.summary }}
+          <p><a class="btn" href="{{ page.url }}">Continue...</a></p>
+
+      {% elseif truncate %}
+          {% if page.summary != content %}
+              {{ content|truncate(550) }}
+          {% else %}
+              {{ content }}
+          {% endif %}
+          <p><a  class="btn" href="{{ page.url }}">Continue...</a></p>
+      {% else %}
+          {{ content }}
+          {% set show_prev_next = true %}
+      {% endif %}
+      {{ block('prev_next_buttons') }}
+      <div class="row tile-gallery">
+            {% for image in page.media.images %}
+              <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 thumb">
+              {#  image.html('', '', 'img-responsive tile-gallery-item') #}
+              <div class="thumbnail">
+                {{ image.lightbox().cropZoom(200,200).html('Sample Image') }}
+              </div>
+              </div>
+            {% endfor %}
+      </div>
+
+    </div>
+
+</div>
+
+
+
+{% endblock %}
+
+{% block prev_next_buttons %}
+{% if show_prev_next or force_hide_prev_next|default(false) %}
+<p class="text-center">
+    {% if not page.isFirst %}
+    <a class="btn btn-default" href="{{ page.nextSibling.url }}"><i class="fa fa-chevron-left"></i>prev</a>
+    {% endif %}
+
+    {% if not page.isLast %}
+    <a class="btn btn-default" href="{{ page.prevSibling.url }}">next<i class="fa fa-chevron-right"></i></a>
+    {% endif %}
+</p>
+{% endif %}
+{% endblock %}

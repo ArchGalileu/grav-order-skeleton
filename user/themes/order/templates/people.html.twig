@@ -1,0 +1,10 @@
+{% extends 'default/set.html.twig' %}
+{% use "default/components/breadcrumbs.html.twig" %}
+
+{% block content %}
+<!-- articles.html.twig -->
+{{ block('breadcrumbs') }}
+{{ page.content }}
+<hr/>
+{{ parent() }}
+{% endblock content %}
